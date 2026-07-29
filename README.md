@@ -194,9 +194,3 @@ The model can be changed through configuration or the Streamlit interface.
 - 当前实现以本地单用户演示为主
 - 模型注册表基于文件保存，不是数据库系统
 - 超参数搜索、交叉验证等高级 AutoML 能力可在后续版本加入
-
-## Resume Summary
-
-Built Universal Classifier, a local AutoML-style tabular classification platform with CSV ingestion, automated preprocessing, model comparison, model registry, train/predict separation, Streamlit UI, HTML reports, and Docker deployment support.
-
-简历描述：构建 Universal Classifier 本地表格分类平台，支持 CSV 导入、自动预处理、模型对比、模型注册、训练与预测流程分离、Streamlit 交互界面、HTML 报告和 Docker 部署。
