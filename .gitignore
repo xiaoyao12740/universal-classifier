@@ -7,3 +7,4 @@ outputs/
 models/
 data/uploaded_*.csv
 data/bad_samples_missing_column.csv
+PRIVATE_WORK_LOG.md

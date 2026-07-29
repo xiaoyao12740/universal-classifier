@@ -79,9 +79,9 @@ CSV 数据
 - `models/classifier.joblib`
 - `models/model_registry.json`
 
-这些输出覆盖了模型指标、预测结果、混淆矩阵、HTML 报告、已保存模型和模型版本记录，便于复现实验结果并向他人展示项目完整性。
+这些输出覆盖了模型指标、预测结果、混淆矩阵、HTML 报告、已保存模型和模型版本记录，便于复现运行结果并检查项目完整性。
 
-These outputs cover model metrics, prediction results, confusion matrix visualization, HTML reporting, saved model artifacts, and model version records, making the experiment easier to reproduce and present.
+These outputs cover model metrics, prediction results, confusion matrix visualization, HTML reporting, saved model artifacts, and model version records, making each run easier to reproduce and inspect.
 
 ## Project Structure
 
