@@ -1,41 +1,46 @@
-# Experiment Record
+# Experiment Record / 实验记录
 
-## Goal
+## Goal / 目标
 
-Upgrade the original Iris classifier into a reusable tabular classification platform.
+将原始 Iris 分类脚本升级为一个可复用的表格分类平台。
 
-## Main Upgrade
+Upgrade the original Iris classifier script into a reusable tabular classification platform.
 
-The original project used:
+## Main Upgrade / 核心升级
+
+原始版本使用：
+
+The original version used:
 
 ```python
 load_iris()
 ```
 
-This version uses:
+当前版本使用真实 CSV 文件：
+
+The current version uses a real CSV file:
 
 ```text
 data/iris.csv
 ```
 
-That means the model is no longer tied to one hard-coded dataset.
+这意味着模型流程不再绑定某个内置数据集，而是可以迁移到其他表格分类任务。
 
-## Method
+This means the model workflow is no longer tied to one built-in dataset and can be reused for other tabular classification tasks.
 
-- Data format: CSV
-- Target column: `label`
-- Models: SVM, Random Forest, KNN
-- Preprocessing:
-  - numeric columns: StandardScaler
-  - categorical columns: OneHotEncoder
-- Model persistence: joblib
-- Outputs:
-  - JSON metrics
-  - CSV predictions
-  - confusion matrix image
-  - HTML report
+## Method / 方法
 
-## Result
+- 数据格式 / Data format: CSV
+- 目标列 / Target column: `label`
+- 模型 / Models: SVM, RandomForest, KNN
+- 预处理 / Preprocessing:
+  - 数值特征：中位数填充 + 标准化 / numeric features: median imputation + scaling
+  - 类别特征：众数填充 + One-Hot 编码 / categorical features: most frequent imputation + one-hot encoding
+- 模型保存 / Model persistence: joblib
+- Web 界面 / Web UI: Streamlit
+- Docker 支持 / Docker support
+
+## Result / 结果
 
 ```text
 Model type: svm
@@ -45,7 +50,7 @@ Macro recall: 0.949
 Macro F1: 0.949
 ```
 
-Prediction demo:
+预测示例 / Prediction demo:
 
 ```text
 5.1,3.5,1.4,0.2 -> setosa
@@ -53,56 +58,11 @@ Prediction demo:
 6.5,3.0,5.8,2.2 -> virginica
 ```
 
-## What To Understand
+## Data Quality Analysis / 数据质量分析
 
-- A real ML project usually separates data loading, preprocessing, model training, evaluation, and reporting.
-- Training and prediction should be separated. You train once, save the model, then reuse the model for future prediction.
-- Config files make the project reusable without editing source code.
-- This project is for tabular classification, not image or NLP tasks.
+Iris 数据分析结果：
 
-## Stage 3 Web App
-
-Added a local Streamlit interface:
-
-- `app.py`: Web entry point
-- `src/app/services.py`: thin service layer that calls existing ML modules
-
-The Web app supports:
-
-- CSV upload for training
-- data preview
-- target column selection
-- model selection
-- training metrics display
-- confusion matrix display
-- CSV upload for prediction
-- prediction result table
-- downloadable prediction CSV
-
-The app does not duplicate the core training code. It calls the existing project modules.
-
-## Stage 4 Model Registry
-
-Added lightweight local MLOps features:
-
-- each training run creates a versioned model file
-- model metadata is stored in `models/model_registry.json`
-- prediction uses the latest registered model by default
-- the Streamlit app includes a model history tab
-
-This avoids overwriting previous trained models and makes experiment tracking easier.
-
-## Stage 4 Data Quality Analysis
-
-Added a pre-training data analysis module:
-
-- `src/data_analysis.py`
-- Streamlit `Data Analysis` tab
-- JSON output: `outputs/data_report.json`
-- class distribution chart: `outputs/target_distribution.png`
-- numeric feature distributions: `outputs/feature_distributions/`
-
-Iris analysis result:
+Iris data analysis result:
 
 ```text
 rows: 150
@@ -112,19 +72,15 @@ duplicate rows: 1
 target classes: 3
 ```
 
-This step matters because data quality often determines the upper bound of model performance.
+数据分析的意义在于：模型效果的上限往往由数据质量决定。
 
-## Stage 4 Auto Model Comparison
+Data analysis matters because model performance is often limited by data quality.
 
-Added a lightweight AutoML comparison mode:
+## Auto Model Comparison / 自动模型比较
 
-- trains SVM, RandomForest, and KNN on the same train/test split
-- ranks models by Macro F1 and Accuracy
-- saves the best model as a versioned model file
-- registers the best model in `models/model_registry.json`
-- writes the leaderboard to `outputs/model_comparison.json`
+同一次训练/测试划分下的模型比较结果：
 
-Iris comparison result:
+Model comparison on the same train/test split:
 
 ```text
 1. svm: accuracy=0.947, macro_f1=0.949
@@ -132,32 +88,27 @@ Iris comparison result:
 3. random_forest: accuracy=0.895, macro_f1=0.897
 ```
 
-## Product Polish
+最佳模型会被保存为版本化模型，并写入模型注册表。
 
-Added product-facing improvements:
+The best model is saved as a versioned model and recorded in the model registry.
 
-- `config/column_descriptions.json` for friendly column names and field descriptions
-- data quality report now includes missing rate, duplicate rate, and scale evaluation
-- prediction checks required feature columns before calling the model
-- CLI and Streamlit show clearer prediction errors
-- HTML report includes a data quality summary
+## Engineering Notes / 工程说明
 
-Bad prediction CSV test:
+- 训练和预测分离 / training and prediction are separated
+- UI 和业务逻辑分离 / UI and business logic are separated
+- sklearn Pipeline 保证训练和预测预处理一致 / sklearn Pipeline keeps preprocessing consistent between training and prediction
+- 模型注册表记录版本和指标 / model registry records model versions and metrics
+- 预测前检查字段完整性 / prediction validates required feature columns
+- Docker 镜像排除输出文件和模型历史 / Docker image excludes outputs and model history artifacts
 
-```text
-Error: Prediction CSV is missing required columns: petal width (cm)
-```
+## What To Learn / 你应该理解什么
 
-## Final Audit Fixes
+- 机器学习项目不只是训练模型，还包括数据分析、预处理、评估、保存、预测和展示。
+- 表格分类项目可以抽象成可复用工程框架。
+- 模型注册和版本管理是 MLOps 的基础思想。
+- Web 应用层不应该复制训练代码，而应该调用已有服务层。
 
-Code audit fixes:
-
-- pinned project dependencies in `requirements.txt`
-- changed latest model lookup to sort by `created_at`
-- stored registry model paths in portable POSIX style
-- removed silent `dropna()` from data loading
-- added median imputation for numeric features
-- added most-frequent imputation for categorical features
-- kept target labels strict: missing target labels raise an error
-- confirmed Auto Model Comparison saves the best model, not the last trained model
-- confirmed Docker context excludes virtual environments, outputs, and model history artifacts
+- A machine learning project is not just model training; it also includes data analysis, preprocessing, evaluation, persistence, prediction, and presentation.
+- A tabular classification task can be abstracted into a reusable engineering framework.
+- Model registry and versioning are basic MLOps concepts.
+- The Web layer should call existing services instead of duplicating training logic.

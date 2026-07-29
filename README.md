@@ -1,58 +1,91 @@
-# 01 - Universal Classifier
+# Universal Classifier / 通用表格分类平台
 
-This is the upgraded version of `01-iris-classifier`. It turns the original Iris-only demo into a reusable tabular classification project.
+一个轻量级 AutoML/MLOps 表格分类项目，支持 CSV 数据分析、模型训练、自动模型比较、模型版本管理、预测推理、Streamlit Web 展示和 Docker 运行。
 
-## What It Does
+A lightweight AutoML/MLOps platform for tabular classification with CSV data analysis, model training, auto model comparison, model registry, prediction, Streamlit UI, and Docker support.
 
-Given a CSV file and a target column, the project can:
+## 项目定位 / Project Positioning
 
-- Load tabular data from CSV
-- Split train/test data
-- Train a selected classification model
-- Save the trained model
-- Generate metrics, predictions, a confusion matrix, and an HTML report
+这个项目不是单纯的 Iris 分类脚本，而是把一个教学分类任务逐步工程化为可复用的表格分类平台。
 
-## Project Structure
+This project is not just an Iris classifier script. It upgrades a teaching demo into a reusable tabular classification platform.
+
+适用场景：
+
+- 表格数据分类
+- 机器学习工程入门
+- sklearn Pipeline 实践
+- 轻量 AutoML 原型
+- 本地 MLOps 学习项目
+
+Suitable for:
+
+- tabular classification
+- machine learning engineering practice
+- sklearn Pipeline practice
+- lightweight AutoML prototyping
+- local MLOps learning
+
+## 核心功能 / Features
+
+- CSV 数据读取 / CSV data loading
+- 数据质量分析 / Data quality analysis
+- 数值与类别特征自动预处理 / automatic numeric and categorical preprocessing
+- SVM、RandomForest、KNN 模型训练 / SVM, RandomForest, and KNN training
+- 自动模型比较与排行榜 / automatic model comparison and leaderboard
+- 训练/预测分离 / separated training and prediction
+- 模型版本管理 / versioned model registry
+- 预测字段检查 / prediction schema validation
+- HTML 实验报告 / HTML experiment report
+- 中英文 Streamlit 页面 / bilingual Streamlit UI
+- Docker 支持 / Docker support
+
+## 项目结构 / Project Structure
 
 ```text
 01-universal-classifier/
+  app.py
+  config.json
+  requirements.txt
+  Dockerfile
+  .dockerignore
   config/
     column_descriptions.json
   data/
     iris.csv
-  models/
-    classifier.joblib
-  outputs/
-    metrics.json
-    predictions.csv
-    confusion_matrix.png
-    report.html
+    new_samples.csv
   src/
+    app/
+      services.py
+    column_descriptions.py
+    data_analysis.py
     data_loader.py
-    preprocessing.py
-    models.py
-    trainer.py
     evaluator.py
-    reporter.py
     main.py
-  config.json
-  requirements.txt
-  README.md
-  EXPERIMENT.md
-  Dockerfile
-  Dockerfile.local
-  .dockerignore
+    model_comparison.py
+    model_registry.py
+    models.py
+    preprocessing.py
+    reporter.py
+    trainer.py
 ```
 
-## Run
+## 快速开始 / Quick Start
 
-Run from the `ML-DL-Projects` root folder:
+### 1. 安装依赖 / Install Dependencies
 
 ```powershell
-.\.venv\Scripts\python.exe .\01-universal-classifier\src\main.py train
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-Example output:
+### 2. 命令行训练 / Train From CLI
+
+```powershell
+.\.venv\Scripts\python.exe src\main.py train
+```
+
+示例输出 / Example output:
 
 ```text
 Model type: svm
@@ -62,19 +95,44 @@ Macro recall: 0.949
 Macro F1: 0.949
 ```
 
-The run generates:
+### 3. 命令行预测 / Predict From CLI
 
-- `models/classifier.joblib`
-- `models/model_YYYYMMDD_HHMMSS.joblib`
-- `models/model_registry.json`
-- `outputs/metrics.json`
-- `outputs/predictions.csv`
-- `outputs/confusion_matrix.png`
-- `outputs/report.html`
+```powershell
+.\.venv\Scripts\python.exe src\main.py predict --input-csv data\new_samples.csv
+```
 
-## Change Model
+示例预测 / Example prediction:
 
-Edit `config.json`:
+```text
+5.1,3.5,1.4,0.2 -> setosa
+6.0,2.9,4.5,1.5 -> versicolor
+6.5,3.0,5.8,2.2 -> virginica
+```
+
+### 4. 启动 Web 页面 / Run Streamlit App
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+打开 / Open:
+
+```text
+http://localhost:8501
+```
+
+Web 页面包含四个 Tab / The Web app includes four tabs:
+
+- 数据分析 / Data Analysis
+- 模型训练 / Train
+- 模型预测 / Predict
+- 模型历史 / Model History
+
+## 配置模型 / Configure Model
+
+编辑 `config.json` 中的模型类型：
+
+Edit the model type in `config.json`:
 
 ```json
 {
@@ -84,15 +142,17 @@ Edit `config.json`:
 }
 ```
 
-Supported model types:
+支持模型 / Supported models:
 
 - `svm`
 - `random_forest`
 - `knn`
 
-## Change Dataset
+## 更换数据集 / Change Dataset
 
-Put a new CSV file in `data/`, then edit:
+把新的 CSV 放到 `data/` 目录，并修改：
+
+Put a new CSV file into `data/`, then update:
 
 ```json
 {
@@ -103,174 +163,146 @@ Put a new CSV file in `data/`, then edit:
 }
 ```
 
-This project is designed for tabular classification, such as flower classification, risk labels, medical indicator categories, or customer segmentation labels.
+本项目适用于表格分类任务，不适用于图像分类或文本生成任务。
 
-It is not designed for image classification or text generation. Those are handled by later projects.
+This project is designed for tabular classification, not image classification or text generation.
 
-## Predict With Saved Model
+## 数据质量分析 / Data Quality Analysis
 
-After training, prepare a CSV file with the same feature columns but without the target column. Then run:
-
-```powershell
-.\.venv\Scripts\python.exe .\01-universal-classifier\src\main.py predict --input-csv data\new_samples.csv
-```
-
-Predictions are saved to:
-
-```text
-outputs/new_predictions.csv
-```
-
-Example prediction result:
-
-```text
-sepal length (cm),sepal width (cm),petal length (cm),petal width (cm),predicted_label
-5.1,3.5,1.4,0.2,setosa
-6.0,2.9,4.5,1.5,versicolor
-6.5,3.0,5.8,2.2,virginica
-```
-
-## Why This Matters
-
-The project now has two separate modes:
-
-- `train`: learn from labeled CSV data, save a versioned model, and register model metadata.
-- `predict`: load the latest registered model and predict labels for new CSV data.
-
-This is closer to real machine learning work: models are trained periodically, then reused for prediction instead of retraining every time new samples arrive.
-
-## Local Web App
-
-This project also provides a Streamlit app. It keeps the machine learning logic in `src/` and uses `app.py` only as the local Web interface.
-
-Start the app from the `01-universal-classifier` folder:
-
-```powershell
-cd D:\360MoveData\Users\11142\Desktop\ML-DL-Projects\01-universal-classifier
-..\.venv\Scripts\python.exe -m streamlit run app.py
-```
-
-If your shell does not accept the path above, run from the `ML-DL-Projects` root folder:
-
-```powershell
-.\.venv\Scripts\python.exe -m streamlit run .\01-universal-classifier\app.py
-```
-
-The app has four tabs:
-
-- `Data Analysis`: upload a CSV and inspect data quality before training.
-- `Train`: upload a CSV, preview data, choose target column, choose model, train, and view metrics.
-- `Predict`: upload a new CSV, load the latest registered model, predict labels, and download `new_predictions.csv`.
-- `Model History`: review saved model versions, algorithms, datasets, and metrics.
-
-The first version is intentionally local-only. It does not include login, database, Docker, cloud deployment, or deep learning models.
-
-## Model Registry
-
-Each training run creates a new model file:
-
-```text
-models/model_YYYYMMDD_HHMMSS.joblib
-```
-
-The registry file records model metadata:
-
-```text
-models/model_registry.json
-```
-
-It includes model name, creation time, algorithm, dataset path, accuracy, precision, recall, and macro F1.
-
-Current scope: this is a single-user local project. `model_registry.json` is not designed for concurrent multi-user writes.
-
-The latest model is selected by `created_at`, not by raw JSON order.
-
-## Data Analysis Report
+数据分析页面会生成：
 
 The data analysis tab generates:
 
-- row count
-- column count
-- feature count
-- missing value count
-- duplicate row count
-- missing rate
-- duplicate rate
-- data scale evaluation
-- column data types
-- optional column display names and descriptions from `config/column_descriptions.json`
-- target class counts and ratios
-- target class distribution chart
-- numeric feature distribution charts
+- 样本数量 / row count
+- 列数量 / column count
+- 特征数量 / feature count
+- 缺失值数量 / missing value count
+- 重复行数量 / duplicate row count
+- 缺失率 / missing rate
+- 重复率 / duplicate rate
+- 数据规模评价 / data scale evaluation
+- 字段类型 / column data types
+- 目标类别分布 / target class distribution
+- 数值特征分布图 / numeric feature distribution charts
 
-The JSON report is saved to:
+输出文件 / Output:
 
 ```text
 outputs/data_report.json
 ```
 
-## Auto Model Comparison
+## 自动模型比较 / Auto Model Comparison
 
-The training tab also supports an automatic comparison mode. It trains:
+自动比较模式会在同一次训练/测试划分上训练：
+
+Auto comparison trains these models on the same train/test split:
 
 - SVM
 - RandomForest
 - KNN
 
-The app ranks models by Macro F1 and Accuracy, saves the best model, and registers it in `models/model_registry.json`.
+模型按 Macro F1 和 Accuracy 排名，并保存最佳模型。
 
-Comparison results are saved to:
+Models are ranked by Macro F1 and Accuracy. The best model is saved and registered.
 
-```text
-outputs/model_comparison.json
-```
-
-Iris example:
+Iris 示例 / Iris example:
 
 ```text
-Best model: svm
-Accuracy: 0.947
-Macro F1: 0.949
+1. svm: accuracy=0.947, macro_f1=0.949
+2. knn: accuracy=0.921, macro_f1=0.922
+3. random_forest: accuracy=0.895, macro_f1=0.897
 ```
 
-## Column Descriptions
+## 模型注册表 / Model Registry
 
-Optional field descriptions live in:
+每次训练会创建版本化模型：
+
+Each training run creates a versioned model:
+
+```text
+models/model_YYYYMMDD_HHMMSS.joblib
+```
+
+模型元数据记录在：
+
+Model metadata is stored in:
+
+```text
+models/model_registry.json
+```
+
+记录内容包括模型名称、创建时间、算法、数据集、Accuracy、Precision、Recall 和 Macro F1。
+
+It records model name, creation time, algorithm, dataset, Accuracy, Precision, Recall, and Macro F1.
+
+当前版本是单用户本地项目，`model_registry.json` 不处理并发写入。
+
+Current scope: this is a single-user local project. `model_registry.json` does not handle concurrent writes.
+
+## 字段解释 / Column Descriptions
+
+字段展示配置位于：
+
+Field display configuration lives in:
 
 ```text
 config/column_descriptions.json
 ```
 
-They let the UI show a friendly display name and description while keeping the original CSV column names unchanged.
+它可以显示中文字段名和字段说明，但不会修改原始 CSV 字段名。
 
-## Prediction Field Check
+It provides friendly display names and descriptions without changing original CSV column names.
 
-Before prediction, the app checks whether the uploaded CSV contains all feature columns required by the trained model. If a column is missing, the user sees a clear message such as:
+## 缺失值策略 / Missing Value Strategy
+
+训练不会静默删除缺失特征行。预处理策略：
+
+Training does not silently drop rows with missing feature values. Preprocessing uses:
+
+- 数值特征：中位数填充 / numeric features: median imputation
+- 类别特征：众数填充 / categorical features: most frequent value imputation
+
+如果目标列本身缺失，程序会报错。
+
+If the target label itself is missing, the program raises an error.
+
+## 预测字段检查 / Prediction Field Check
+
+预测前会检查上传 CSV 是否包含训练模型需要的全部字段。
+
+Before prediction, the app checks whether the uploaded CSV contains all required feature columns.
+
+示例 / Example:
 
 ```text
 Prediction CSV is missing required columns: petal width (cm)
 ```
 
-## Missing Value Strategy
-
-The loader does not silently drop rows with missing feature values. Missing values are handled in preprocessing:
-
-- numeric features: median imputation
-- categorical features: most frequent value imputation
-
-Rows are rejected only when the target column itself contains missing labels.
-
 ## Docker
-
-Standard build:
 
 ```powershell
 docker build -t universal-classifier:latest .
 docker run --rm -p 8502:8501 universal-classifier:latest
 ```
 
-Open:
+打开 / Open:
 
 ```text
 http://localhost:8502
 ```
+
+## 技术栈 / Tech Stack
+
+- Python
+- pandas
+- scikit-learn
+- matplotlib
+- Streamlit
+- joblib
+- Docker
+
+## 项目状态 / Status
+
+当前版本可作为第一个机器学习工程作品的 `v1.0`。
+
+Current version can be treated as `v1.0` of a first machine learning engineering portfolio project.
