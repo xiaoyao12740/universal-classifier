@@ -1,27 +1,42 @@
 {
   "sepal length (cm)": {
     "zh_name": "花萼长度",
+    "en_name": "Sepal length",
     "description": "鸢尾花花萼部分的长度，单位为厘米。",
+    "description_zh": "鸢尾花花萼部分的长度，单位为厘米。",
+    "description_en": "Length of the iris sepal, measured in centimeters.",
     "type": "numeric"
   },
   "sepal width (cm)": {
     "zh_name": "花萼宽度",
+    "en_name": "Sepal width",
     "description": "鸢尾花花萼部分的宽度，单位为厘米。",
+    "description_zh": "鸢尾花花萼部分的宽度，单位为厘米。",
+    "description_en": "Width of the iris sepal, measured in centimeters.",
     "type": "numeric"
   },
   "petal length (cm)": {
     "zh_name": "花瓣长度",
+    "en_name": "Petal length",
     "description": "鸢尾花花瓣部分的长度，单位为厘米。",
+    "description_zh": "鸢尾花花瓣部分的长度，单位为厘米。",
+    "description_en": "Length of the iris petal, measured in centimeters.",
     "type": "numeric"
   },
   "petal width (cm)": {
     "zh_name": "花瓣宽度",
+    "en_name": "Petal width",
     "description": "鸢尾花花瓣部分的宽度，单位为厘米。",
+    "description_zh": "鸢尾花花瓣部分的宽度，单位为厘米。",
+    "description_en": "Width of the iris petal, measured in centimeters.",
     "type": "numeric"
   },
   "label": {
     "zh_name": "鸢尾花类别",
+    "en_name": "Iris class",
     "description": "模型需要预测的目标类别。",
+    "description_zh": "模型需要预测的目标类别。",
+    "description_en": "Target class predicted by the model.",
     "type": "categorical"
   }
 }
