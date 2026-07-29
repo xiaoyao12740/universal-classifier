@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+outputs/
+models/
+data/uploaded_*.csv
+data/bad_samples_missing_column.csv

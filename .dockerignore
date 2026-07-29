@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.git/
+models/*.joblib
+models/model_registry.json
+outputs/
+data/uploaded_*.csv
+data/bad_samples_missing_column.csv

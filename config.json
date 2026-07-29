@@ -1,0 +1,23 @@
+{
+  "data": {
+    "csv_path": "data/iris.csv",
+    "target_column": "label",
+    "test_size": 0.25,
+    "random_state": 42
+  },
+  "model": {
+    "type": "svm"
+  },
+  "outputs": {
+    "model_path": "models/classifier.joblib",
+    "metrics_path": "outputs/metrics.json",
+    "report_path": "outputs/report.html",
+    "confusion_matrix_path": "outputs/confusion_matrix.png",
+    "prediction_path": "outputs/predictions.csv",
+    "new_prediction_path": "outputs/new_predictions.csv",
+    "data_report_path": "outputs/data_report.json",
+    "target_distribution_path": "outputs/target_distribution.png",
+    "feature_distribution_dir": "outputs/feature_distributions",
+    "model_comparison_path": "outputs/model_comparison.json"
+  }
+}

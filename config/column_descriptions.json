@@ -1,0 +1,27 @@
+{
+  "sepal length (cm)": {
+    "zh_name": "花萼长度",
+    "description": "鸢尾花花萼部分的长度，单位为厘米。",
+    "type": "numeric"
+  },
+  "sepal width (cm)": {
+    "zh_name": "花萼宽度",
+    "description": "鸢尾花花萼部分的宽度，单位为厘米。",
+    "type": "numeric"
+  },
+  "petal length (cm)": {
+    "zh_name": "花瓣长度",
+    "description": "鸢尾花花瓣部分的长度，单位为厘米。",
+    "type": "numeric"
+  },
+  "petal width (cm)": {
+    "zh_name": "花瓣宽度",
+    "description": "鸢尾花花瓣部分的宽度，单位为厘米。",
+    "type": "numeric"
+  },
+  "label": {
+    "zh_name": "鸢尾花类别",
+    "description": "模型需要预测的目标类别。",
+    "type": "categorical"
+  }
+}
